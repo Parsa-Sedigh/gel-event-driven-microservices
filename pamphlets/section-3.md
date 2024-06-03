@@ -39,3 +39,99 @@ So this plugin sets the java compiler version for a maven project.
 Note: Starting with java 9, instead of <source> and <target>, we need to use <release>
 
 ## 7-003 The very first microservice
+Twitter-to-kafka service: Responsible for get the data from twitter and put it in kafka.
+
+We don't need to specify versions for the deps in submodules that have defined versions in base pom.xml .
+
+Note: <scope>provided</scope> : use for compile-only tools which are not required at runtime.
+
+Since this service won't be triggered by a client and need to start reading data from twitter when the app starts,
+we need to find a way to trigger the reading logic. There are a couple of opts:
+1. we can use @PostConstruct on a method like init(). That method will be called once after the spring bean created. And by default,
+spring beans are created once because they are created as singletons. However, we can change change this behavior with @Scope().
+@Scope("request") will create a new spring bean for each req. With this annotation, how many times the init method of TwitterToKafkaServiceApplication
+will be called then? It will be called in each req separately because the method will run after each obj creation. So @Scope("request")
+is not a good option for an application general initialization job. Although this behavior is only valid for example for a controller,
+where a req will cause to create a new bean, we still look for a better alternative for initialization.
+```java
+@SpringBootApplication
+@Scope("request")
+public class TwitterToKafkaServiceApplication {
+    @PostConstruct
+    public static void main(String[] args) {
+        SpringApplication.run(TwitterToKafkaServiceApplication.class, args);
+    }
+}
+```
+2. implementing ApplicationListener interface and overriding onApplicationEvent() . This method is an application listener method, so
+it will run only once for sure, therefore we can use it.
+```java
+@SpringBootApplication
+public class TwitterToKafkaServiceApplication implements ApplicationListener {
+    public static void main(String[] args) {
+        SpringApplication.run(TwitterToKafkaServiceApplication.class, args);
+    }
+
+    @Override
+    public void onApplicationEvent(ApplicationEvent applicationEvent) {
+        
+    }
+}
+```
+3. implementing CommandLineRunner and overriding the run() method. This is also a perfect option for application initialization logic.
+The only difference with the previous way is the parameters.
+```java
+@SpringBootApplication
+public class TwitterToKafkaServiceApplication implements CommandLineRunner {
+    public static void main(String[] args) {
+        SpringApplication.run(TwitterToKafkaServiceApplication.class, args);
+    }
+
+    @Override
+    public void run(String... args) throws Exception {}
+}
+```
+
+Note: @PostConstruct executes after dependency injection to perform initialization.
+
+Since we don't need to use the ApplicationEvent, we choose the third option.
+
+There are also other ways to start initialization logic like using @EventListener, but we stick to CommandLineRunner for now as it will
+do the job for us.
+
+application.yml or application.properties is used to bind external properties into an application at runtime.
+
+Lombok: creates code like getter, setter and ... and then update the class with these methods during **compilation** and the 
+resulting bytecode that will be run by jvm, will actually include these methods created by lombok.
+
+So lombok updates the class with additional methods during compilation.
+
+With springboot, we got logback and slf4j deps automatically, so we could only add a logback.xml to customize logging behavior.
+
+If you specify a lower log level, it will also log the higher levels but not the lower levels than the current one. 
+That means trace level will print all the log messages defined in the code. However, if you see the level as error,
+all the logs except error, will be ignored.
+
+trace > debug > info > warn > error.
+
+Run `mvn clean install` to install the deps and to see if we have a successful build.
+
+There are two ways to inject an obj into another:
+- field injection: using @Autowired
+- constructor injection: using constructor
+
+There are some disadvantages of using field injection:
+1. you don't need to use @Autowired with constructor injection, so you can inject an obj while you are writing a simple java code
+without adding any annotation
+
+Advantages of using constructor injection:
+1. allows to be immutable, since you can define the property as final. And immutable objects helps to create more robust and
+thread-safe apps
+2. forces that the obj is created with the required dep as the **constructor forces it**
+3. we don't use reflection with this kind of injection unlike field injection. We know that reflection makes the app code to run slower
+since it involves types that are dynamic result at runtime.
+
+So: Prefer constructor injection over field injection because it favors immutability & forces object creation with the injected
+obj & no reflection & no @Autowired.
+
+## 8-004 Streaming tweets with Twitter4j The command component in CQRS & Event sourcing
