@@ -6,3 +6,11 @@ twitter-to-kafka-service:
     - Kafka
     - Elasticsearch
   welcome-message: Hello microservice!
+  twitter-v2-base-url: https://api.twitter.com/2/tweets/search/stream?tweet.fields=created_at&expansions=author_id
+  twitter-v2-rules-base-url: https://api.twitter.com/2/tweets/search/stream/rules
+
+  # TWITTER_BEARER_TOKEN env variable. Use export TWITTER_BEARER_TOKEN=... or better update env variables permanently with the value
+  # and then restart intellij.
+  twitter-v2-bearer-token: ${TWITTER_BEARER_TOKEN}
+  enable-v2-tweets: true
+  enable-mock-tweets: false

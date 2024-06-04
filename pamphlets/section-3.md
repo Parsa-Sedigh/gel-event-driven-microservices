@@ -164,3 +164,6 @@ Eventual consistency: a consistency model used in distributed computing to achie
 if no new updates are made to a given data item, eventually all accesses to that item will return the last updated value.
 
 ## 9-005 Streaming tweets with Twitter Api V2
+For now, to use twitter v2 api, we can't use twitter4j altogether, instead create a custom twitter client and trigger twitter4j listener class.
+
+## 10-006 Adding mock twitter stream as an alternative
