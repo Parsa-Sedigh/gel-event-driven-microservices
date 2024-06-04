@@ -32,5 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-pamphlets/img/
-pamphlets/slides/
+pamphlets/img/*
+pamphlets/slides/*
+
+twitter-to-kafka-service/src/main/resources/twitter4j.properties
