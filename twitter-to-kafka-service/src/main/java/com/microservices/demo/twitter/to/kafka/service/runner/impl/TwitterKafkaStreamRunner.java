@@ -13,9 +13,11 @@ import twitter4j.*;
 
 import java.util.Arrays;
 
+/* With these values in @ConditionalOnProperty, in case enable-mock-tweets config var can't be found, this class will be loaded
+and used.*/
 @Component
-//@ConditionalOnProperty(name = "twitter-to-kafka-service.enable-v2-tweets", havingValue = "false")
-@ConditionalOnExpression("${twitter-to-kafka-service.enable-mock-tweets} && not ${twitter-to-kafka-service.enable-v2-tweets}")
+@ConditionalOnProperty(name = "twitter-to-kafka-service.enable-mock-tweets", havingValue = "false", matchIfMissing = true)
+//@ConditionalOnExpression("${twitter-to-kafka-service.enable-mock-tweets} && not ${twitter-to-kafka-service.enable-v2-tweets}")
 public class TwitterKafkaStreamRunner implements StreamRunner {
     private static final Logger LOG = LoggerFactory.getLogger(TwitterKafkaStreamRunner.class);
     private final TwitterToKafkaServiceConfigData twitterToKafkaServiceConfigData;

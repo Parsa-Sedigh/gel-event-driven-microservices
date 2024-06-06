@@ -43,7 +43,8 @@ twitter-to-kafka-service.enable-mock-tweets is false.
 
 Here, we created a wrapper around twitter4j classes because twitter4j doesn't work with twitter v2 api.*/
 @Component
-@ConditionalOnExpression("${twitter-to-kafka-service.enable-v2-tweets} && not ${twitter-to-kafka-service.enable-mock-tweets}")
+@ConditionalOnProperty(name = "twitter-to-kafka-service.enable-v2-tweets", havingValue = "false", matchIfMissing = true)
+//@ConditionalOnExpression("${twitter-to-kafka-service.enable-v2-tweets} && not ${twitter-to-kafka-service.enable-mock-tweets}")
 public class TwitterV2StreamHelper {
 
     private static final Logger LOG = LoggerFactory.getLogger(TwitterV2StreamHelper.class);

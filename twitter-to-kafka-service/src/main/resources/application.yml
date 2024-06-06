@@ -12,5 +12,8 @@ twitter-to-kafka-service:
   # TWITTER_BEARER_TOKEN env variable. Use export TWITTER_BEARER_TOKEN=... or better update env variables permanently with the value
   # and then restart intellij.
   twitter-v2-bearer-token: ${TWITTER_BEARER_TOKEN}
-  enable-v2-tweets: true
-  enable-mock-tweets: false
+#  enable-v2-tweets: false
+  enable-mock-tweets: true
+  mock-min-tweet-length: 5
+  mock-max-tweet-length: 15
+  mock-sleep-ms: 10000
