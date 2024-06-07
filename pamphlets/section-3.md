@@ -262,3 +262,21 @@ partitions one by one in rational order.
 Round-robin: send data to each partition equally in rational order.
 
 ## 12-008 Adding common config module
+When a svc gets data from config server, the config data will be hold on config data classes and it makes sense to create a 
+config data module and hold all config classes there.
+
+So the config module holds all java config classes of all services.
+
+We wanna keep the config classes in a single module instead of holding them in each microservice.
+
+@ComponentScan(basePackages = "com.microservices.demo") is required to allow finding the spring beans in other modules. When a spring boot
+app starts, by default it scans the packages starting from the package directory that the spring boot app main class resides in.
+In twitter-to-kafka-service module, the package that the application class scans, is `com.microservices.demo.twitter.to.kafka.service`.
+
+When we work with multiple modules, there will be some spring beans that reside in different packages, for example the TwitterToKafkaServiceConfigData
+class is in com.microservices.demo.config package which is not in the package of application class of TwitterToKafkaServiceApplication which is
+com.microservices.demo.twitter.to.kafka.service which is the default scan. So we have to use @ComponentScan() with
+`basePackages = "com.microservices.demo"` . So spring will find all packages in all modules because we use com.microservices.demo as the
+base group for our project. Every module has a package structure that starts with com.microservices.demo .
+
+## 13-009 Running Apache Kafka cluster with docker Kafka, Zookeeper and Schema Registry

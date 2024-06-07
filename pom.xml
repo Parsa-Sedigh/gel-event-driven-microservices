@@ -13,9 +13,13 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>microservices-demo</name>
 	<description>Microservices demo project for Spring Boot</description>
+
+	<!-- all of the modules appear in the root pom.xml . -->
     <modules>
         <module>twitter-to-kafka-service</module>
+        <module>app-config-data</module>
     </modules>
+
     <packaging>pom</packaging>
 
 	<properties>
@@ -30,6 +34,14 @@
 
 	<dependencyManagement>
 		<dependencies>
+			<!-- ============ LOCAL ============ -->
+			<dependency>
+				<groupId>com.microservices.demo</groupId>
+				<artifactId>app-config-data</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- ================================= -->
+
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter</artifactId>

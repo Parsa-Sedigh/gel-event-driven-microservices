@@ -1,6 +1,6 @@
 package com.microservices.demo.twitter.to.kafka.service;
 
-import com.microservices.demo.twitter.to.kafka.service.config.TwitterToKafkaServiceConfigData;
+import com.microservices.demo.config.TwitterToKafkaServiceConfigData;
 import com.microservices.demo.twitter.to.kafka.service.runner.StreamRunner;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Scope;
 
 import java.util.Arrays;
 
+/* @ComponentScan(basePackages = "com.microservices.demo") is required to allow finding the spring beans in other modules. When a spring boot
+app starts, by default it scans the packages starting from the package directory that the spring boot app main class resides in.
+In twitter-to-kafka-service module, the package that the application class scans, is `com.microservices.demo.twitter.to.kafka.service`.*/
 @SpringBootApplication
 @ComponentScan(basePackages = "com.microservices.demo")
 public class TwitterToKafkaServiceApplication implements CommandLineRunner {
