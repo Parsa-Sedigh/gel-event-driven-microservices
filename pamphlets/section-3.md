@@ -179,3 +179,86 @@ Using config vars in application.yml, we can change the configs at compile time(
 at **compile time**) and spring will load the correct bean at **runtime**.
 
 ## 11-007 Introducing Apache KafkaEvent sourcing, topics, partitions, producer & consumer
+we use kafka as event store in our project.
+
+### Kafka basics
+- low latency & high throughput
+- holds the data in an immutable, append-only structure called topics. We call this data as logs or events. It's immutability ensures that
+you will have all history of data feeds.
+- kafka is fast, resilient, scalable and has high throughput
+- it's resilient as it relies on file system(instead of memory) for storing and caching messages. It keeps all messages on disk and use replicas.
+- resilient and fault-tolerant by replication. It keeps a configurable amount of replicas to prevent data loss in case of a failure.
+- it's fast because it relies on disk caching and **memory-mapped** files of the underlying OS instead of garbage collector eligible JVM memory.
+A memory mapped file contains the contents of a file in virtual memory. The mapping between a file and memory space enables an application to
+modify the file by reading and writing directly to the memory. Accessing memory mapped files is faster than using direct read & write ops as it
+operators on memory. So memory mapped files are faster and have lower I/O latency than using a direct disk access. In addition to that,
+in most operating systems, the memory region assigned to a mapped file is in kernel's page cache. That means no copies will be created in 
+the user memory space and it will directly operate on disk cache, which will be faster.
+Page cache consists of physical pages in RAM, corresponds to physical blocks on disc. So although kafka uses disk to store the data
+for resiliency, it actually provides a strong caching mechanism by using disk caching which actually means it works directly on memory of
+the underlying OS most of the time.
+- scale by partitions. Kafka has a natural scaling capability thanks to the partitions inside each topic. So you can scale by just increasing
+the partition number.
+- ordered inside partition. Ordering is only guaranteed in a single partition. You can put the related data to the same partition by using a
+partitioning strategy. So we use partitioning strategy to insert related data into the same partition.
+- kafka as an event store: a great match for event-driven microservices
+
+For high availability, it's better to hold the brokers on different servers.
+
+Kafka producer:
+- sends data to kafka cluster
+- thread safe for multi-threading. So in most cases, using a single producer might be enough for the system.
+
+The replication factor can be as much as the broker number to get higher resiliency. But OFC if the replication factor increases,
+the perf cost is increase a bit as well because with multiple replications, it will require approvals from all of the replicas to
+finalize a data to be produced on a kafka topic.
+
+Each partition can only be assigned to a single consumer. So a partition can only have one consumer. On the other hand,
+it's possible to read(consume) multiple partitions from a single consumer.
+
+Yes, we can use a single consumer to consume all the partitions. But we can add more consumers up to the number of partition number.
+
+You can use threads in a single process, or processes on a single machine
+
+**Kafka consumer concurrency level:** threads -> processes -> machines. We can use threads in a single process or processes on a 
+single machine or even processes on different physical machines. These are the concurrency levels. 
+
+### Kafka producer basics
+A producer holds a buffer of unsent records per partition.
+
+- batch.size: the more the batch, the more throughout.
+- linger.ms: used to add a delay on producer for higher throughput. default is 0, so no delay by default! So setting this to 10,
+will cause 10ms delay for each send on the producer.
+- max.in.flight.requests.per.connection: used to limit the in-flight reqs number on producer
+
+linger.ms tradeoff: increasing it will increase the throughput, but it will also cause a delay as the producer will wait more before
+sending the data. So delay vs throughput tradeoff.
+
+multiple broker nodes: to achieve high availability and resiliency. 
+
+Another trade-off between performance and resiliency:
+- ack=all: used for better resiliency.
+- ack=1: producer will wait confirmation only from the target broker.
+- ack=0: no resiliency. Producer will not wait for any confirmations.
+
+Note: By default, there is no compression on producer.
+
+By using compressed data, we can send more data at once through the network and increase the throughput.
+
+Snapp: Fast compressor with a less compression
+
+End to end compression: better in performance as compression is done once.
+
+Note: If you set `retry` config more than 0, there will be a possibility that the order of messages will be lost. Because any failed data,
+can be inserted in the second try and it will be inserted after the records that naturally comes after it. To prevent this, you can use
+max.in.flight.requests.per.connection = 1 (if retires > 0) , so you can only send one **record** at the time. But OFC this will affect the
+perf, because you can't use batching in this case. So you need to decide if ordering is important.
+
+Another tradeoff: retires tradeoff. Ordering vs performance
+
+DefaultPartitioner uses round-robin approach to distribute the load on the partitions. That means, it will send data to available
+partitions one by one in rational order.
+
+Round-robin: send data to each partition equally in rational order.
+
+## 12-008 Adding common config module
