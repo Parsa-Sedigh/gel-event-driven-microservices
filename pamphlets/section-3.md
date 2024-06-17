@@ -333,3 +333,18 @@ mvn clean install
 ```
 
 ## 15-011 Creating kafka-admin module - Part 1 Configuration and dependencies
+We need to check(verify) if the topics are created and schema server is running, prior to running microservices. This will be required,
+because when you run all components in a single docker compose file, if kafka or schema registry or any other dep is not running,
+your app will fail at startup and won't continue to work as expected. So to make your services more resilient, you will need to add
+some checks prior to running services. These checks are at kafka-admin module. Also apart from these programmatic check, we will add more checks
+in the compose file.
+
+spring retry: automatically retry a failed op.
+
+Spring-aop is required to be able to use spring-retry.
+
+ExponentialBackOffPolicy: increases wait time for each retry attempt
+
+kafka AdminClient: manage and inspect brokers, topics and configurations.
+
+## 16-012 Creating kafka-admin module - Part 2 Creating Kafka topics programmatically
