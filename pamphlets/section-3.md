@@ -280,3 +280,56 @@ com.microservices.demo.twitter.to.kafka.service which is the default scan. So we
 base group for our project. Every module has a package structure that starts with com.microservices.demo .
 
 ## 13-009 Running Apache Kafka cluster with docker Kafka, Zookeeper and Schema Registry
+If you don't set a bridge network, a default network will be created. And on the **default** bridge network, containers can only access
+each other by IP addresses. But with a user-defined bridge network, containers can be resolved using hostnames which is more handy instead
+of IP addresses, because IP has a dynamic structure and can change in time.
+
+Zookeeper is required to hold metadata for a cluster and play a role in determining leader election and cluster health.
+KIP 500 project will remove the zookeeper from kafka. The leader election will be done inside the kafka cluster itself, where the leader itself is
+responsible for the cluster health.
+
+Schema registry is used to register a schema for a kafka topic and it will check the producers and consumers each time, to force them to
+use a registered schema so that only the allowed(valid) schema will be used. Producers and consumers check schema with id and
+cache the result before sending and receiving data. So it's actually a one-time req to the schema registry and then subsequent checks are
+done by using cache.
+
+Schema registry also allows backward and forward compatibility. So schema can evolve without breaking changes.
+
+Why we have defined 3 kafka brokers?
+
+It's to accomplish the concept of quorum which indicates the minimum number of members necessary to conduct a business in a group. And in
+kafka terms, this will prevent split brain issue, which can occur when a network split occurs. It prevents creating more than one network in
+a group of kafka brokers such that with three brokers, a network must have two nodes at least. This way we can be sure that **only**
+one network can be created because there can only be a one group with two nodes. Note that the other group will only have one node,
+which is not enough to create a network.
+
+Quorum: set the minimum number of brokers to create a network - prevent split brain.
+
+```shell
+docker-compose -f common.yml -f kafka_cluster.yml up
+
+# to see if containers are running
+docker ps
+```
+
+CLI tool called kafkacat to monitor kafka cluster and topics.
+
+To use it on windows, it's better to use kafkacat docker image. Note that to use kafkacat with the docker image, use
+`--network=host` option in `docker run`, because when we use kafkacat inside a docker container, to be able to reach to the host machine that 
+is localhost in our case, we need to start the container by including it in the host machine's network.
+
+The kafka-admin submodule will create and verify kafka topics programmatically.
+
+The kafka-producer submodule will include spring-kafka to write kafka producer implementation.
+
+## 14-010 Creating kafka-model module
+avro: strict schema and efficient byte serialization.
+
+avro-maven-plugin: creates java classes from avro schema file.
+
+To create the java classes from avro files:
+```shell
+mvn clean install
+```
+
+## 15-011 Creating kafka-admin module - Part 1 Configuration and dependencies
