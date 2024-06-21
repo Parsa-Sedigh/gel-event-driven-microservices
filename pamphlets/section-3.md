@@ -348,3 +348,5 @@ ExponentialBackOffPolicy: increases wait time for each retry attempt
 kafka AdminClient: manage and inspect brokers, topics and configurations.
 
 ## 16-012 Creating kafka-admin module - Part 2 Creating Kafka topics programmatically
+
+## 17-013 Creating kafka-producer module Configuration of Kafka producer
