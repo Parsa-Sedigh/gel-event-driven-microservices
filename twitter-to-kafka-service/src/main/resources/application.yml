@@ -37,3 +37,21 @@ kafka-config:
   num-of-partitions: 3
   replication-factor: 3
 
+kafka-producer-config:
+  key-serializer-class: org.apache.kafka.common.serialization.LongSerializer
+  value-serializer-class: io.confluent.kafka.serializers.KafkaAvroSerializer
+  compression-type: snappy
+  
+  # we want to get acknowledgements from all replicas to be more resilient.
+  acks: all
+  batch-size: 16384 # 16kb which is the default value
+
+  # to try different values and see if it performs better or not. We set it to 100 times of the default val to enable
+  # more batching and therefore to get high throughput.
+  batch-size-boost-factor: 100
+
+  # adds a delay on producer in case of light load.
+  linger-ms: 5
+  # if after this timeout, no ack comes, producer will throw timeout error
+  request-timeout-ms: 60000
+  retry-count: 5
