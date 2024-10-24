@@ -1,5 +1,3 @@
-version: '3.7'
-
 networks:
   application:
     # a bridge network allows containers connect to the same bridge network to communicate while preventing other containers to

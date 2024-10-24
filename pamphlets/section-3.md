@@ -500,3 +500,37 @@ Then run the app with `enable-mock-tweets: true`.
 
 To create the docker img, we use `spring-boot:build-image` property. It creates a docker image for a spring boot app.
 Spring boot provides this property through the spring-boot-maven plugin.
+
+If you run `mvn install` from root, it will compile and build the project and then it will create the docker image of
+the twitter-to-kafka-service.
+
+Note: when we run `mvn install`, it will also run the context load tests and currently when the context loads, it will
+try to reach to kafka in the test and since we don't have any kafka mock running on test, we should first run a kafka
+cluster locally before running `mvn install` or we can use `mvn install -DskipTests` to skip context load test, so we can
+install deps and create docker img.
+
+Spring boot `build-image` follows layerd approach to prevent two overheads:
+1. prevents creating a single fat jar
+2. if there's an update, there will be no need to update the whole jar. Thanks to using caching. This is achieved with the help of
+cloud native buildpacks. 
+
+So docker img is created with a layerd approach and layering is designed to separate the code based on how likely it is to change
+between application builds. Library code is less likely to change between builds so it is placed in it's over layers to allow tooling
+to reuse the layers from cache. App code on the other end, is more likely to change between builds, so it is isolated on a separate layer.
+So by reusing layers during image creation and caching the results, we get faster builds.
+
+To run all the components:
+
+```shell
+docker compose -f common.yml -f kafka_cluster.yml -f services.yml up
+docker ps
+kafkacat -L -b localhost:19092
+docker logs -f container_id
+```
+
+However, we can use the .env file to set the yml files we wanna run, by setting the `COMPOSE_FILE` env and then we can only run
+```shell
+# in docker-compose directory:
+docker compose up
+``` 
+to start all containers we've listed in the `COMPOSE_FILE` env.

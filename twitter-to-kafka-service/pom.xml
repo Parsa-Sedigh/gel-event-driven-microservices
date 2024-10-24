@@ -63,7 +63,21 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${spring-boot.version}</version>
+                <configuration>
+                    <image>
+                        <name>${project.groupId}/twitter.to.kafka.service:${project.version}</name>
+                    </image>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <!-- We want to create the docker image when we run `mvn install` command -->
+                        <phase>install</phase>
+                        <goals>
+                            <goal>build-image</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
