@@ -1,4 +1,4 @@
-## 5-001 Introduction to Spring boot
+`## 5-001 Introduction to Spring boot
 
 ## 6-002 Creating the base Spring boot project
 
@@ -353,24 +353,21 @@ Round-robin: send data to each partition equally in rational order.
 ## 12-008 Adding common config module
 
 When a svc gets data from config server, the config data will be hold on config data classes and it makes sense to
-create a
-config data module and hold all config classes there.
+create a config data module and hold all config classes there.
 
 So the config module holds all java config classes of all services.
 
 We wanna keep the config classes in a single module instead of holding them in each microservice.
 
 @ComponentScan(basePackages = "com.microservices.demo") is required to allow finding the spring beans in other modules.
-When a spring boot
-app starts, by default it scans the packages starting from the package directory that the spring boot app main class
-resides in.
+When a spring boot app starts, by default it scans the packages starting from the package directory that the spring boot
+app main class resides in.
 In twitter-to-kafka-service module, the package that the application class scans,
 is `com.microservices.demo.twitter.to.kafka.service`.
 
 When we work with multiple modules, there will be some spring beans that reside in different packages, for example the
-TwitterToKafkaServiceConfigData
-class is in com.microservices.demo.config package which is not in the package of application class of
-TwitterToKafkaServiceApplication which is
+TwitterToKafkaServiceConfigData class is in com.microservices.demo.config package which is not in the package of
+application class of TwitterToKafkaServiceApplication which is
 com.microservices.demo.twitter.to.kafka.service which is the default scan. So we have to use @ComponentScan() with
 `basePackages = "com.microservices.demo"` . So spring will find all packages in all modules because we use
 com.microservices.demo as the
@@ -413,8 +410,10 @@ which is not enough to create a network.
 
 Quorum: set the minimum number of brokers to create a network - prevent split brain.
 
+In docker-compose directory:
+
 ```shell
-docker-compose -f common.yml -f kafka_cluster.yml up
+docker compose -f common.yml -f kafka_cluster.yml up
 
 # to see if containers are running
 docker ps
@@ -446,14 +445,10 @@ mvn clean install
 ## 15-011 Creating kafka-admin module - Part 1 Configuration and dependencies
 
 We need to check(verify) if the topics are created and schema server is running, prior to running microservices. This
-will be required,
-because when you run all components in a single docker compose file, if kafka or schema registry or any other dep is not
-running,
-your app will fail at startup and won't continue to work as expected. So to make your services more resilient, you will
-need to add
-some checks prior to running services. These checks are at kafka-admin module. Also apart from these programmatic check,
-we will add more checks
-in the compose file.
+will be required, because when you run all components in a single docker compose file, if kafka or schema registry or
+any other dep is not running, your app will fail at startup and won't continue to work as expected. So to make your
+services more resilient, you will need to add some checks prior to running services. These checks are at kafka-admin
+module. Also apart from these programmatic check, we will add more checks in the compose file.
 
 spring retry: automatically retry a failed op.
 
@@ -474,3 +469,34 @@ acks: all - wait ack from all replicas | 1: wait only current broker's ack | 0: 
 Kafka template: A thread-safe template for executing high level producer ops.
 
 **Listenable future**: Register callback methods for handling events when the response return.
+
+## 19-015 Integrate Kafka modules with Microservice Use Kafka as event store for service
+
+- Kafka-producer module: uses spring-kafka to write kafka producer implementation.
+- kafka-admin module: create and verify kafka topics programmatically and check if topics are created and schema
+  registry is up and running
+
+Check if the kafka cluster is ready:
+
+```shell
+kafkacat -L -b localhost:<broker port>
+```
+
+Then run `TwitterToKafkaServiceApplication` with `enable-mock-tweets: false`.
+
+Examine kafka cluster:
+
+```shell
+kafkacat -L -b localhost:19092
+
+# Note: Using kafkacat with -C flag, makes it consumer
+# kafkacat consumer: kafkacat -C -b host:port -t topic_name
+kafkacat -C -b localhost:19092 -t twitter-topic
+```
+
+Then run the app with `enable-mock-tweets: true`.
+
+## 20-016 Containerization of microservice with docker image Run all with docker compose
+
+To create the docker img, we use `spring-boot:build-image` property. It creates a docker image for a spring boot app.
+Spring boot provides this property through the spring-boot-maven plugin.
