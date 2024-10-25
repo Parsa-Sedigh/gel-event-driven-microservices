@@ -34,6 +34,18 @@ this using a `<include resource="..." />` without setting any path for `resource
 since logback will scan the classpath starting from the top directory.
 
 ## 24-004 Changing twitter-to-kafka-service to work with config server
+Note: Fetching config data from config-server should be before loading the application config, so we need to use
+bootstrap configuration in bootstrap.yml not application config in application.yml .
+
+Note: Now when we run
+```shell
+mvn clean install
+```
+it requires the config server to run the tests. So run config-server before running mvn clean install for twitter-to-kafka service.
+This is required because mvn install cmd will load the context from twitter-to-kafka service and since we defiend a context load test
+there, it requires the config-server as it will try to fetch data from config-server. But again you can use mvn clean install -DskipTests
+to skip the context load test in case you don't want to run config-server.
+
 ## 25-005 lecture-23-run-project
 ## 26-005 Using remote GitHub repository
 ## 27-006 Adding security to config server and encrypt passwords

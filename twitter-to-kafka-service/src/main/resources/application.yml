@@ -57,3 +57,14 @@
 #  # if after this timeout, no ack comes, producer will throw timeout error
 #  request-timeout-ms: 60000
 #  retry-count: 5
+
+spring:
+  application:
+    name: twitter-to-kafka-service
+  profiles:
+    # note: naming is important here. In config-server-repository, the name of the config file for this microservice is:
+    # `config-client-twitter_to_kafka` which matches profiles.active .
+    active: twitter_to_kafka
+  config:
+    name: twitter-to-kafka-service,config-client
+    import: configserver:http://localhost:8888

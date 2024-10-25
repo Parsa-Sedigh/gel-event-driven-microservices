@@ -17,15 +17,16 @@
 
 # So for high availability and repository caching: use ssh with shared file system or http with remote git repository.
 
-spring:
-  application:
-    name: configserver
-  cloud:
-    config:
-      server:
-        git:
-          uri: file://Users/parsa/dev/personal/java-projects/gel-event-driven-microservices/config-server-repository
-          clone-on-start: true
-
-    # if config server can't reach the config server repo and load the config, it will stop immediately.
-    fail-fast: true
+# DOESN'T WORK HERE FOR SOME REASON, MOVED TO application.yml
+#spring:
+#  application:
+#    name: configserver
+#  cloud:
+#    config:
+#      server:
+#        git:
+#          uri: file://Users/parsa/dev/personal/java-projects/gel-event-driven-microservices/config-server-repository
+#          clone-on-start: true
+#
+#      # if config server can't reach the config server repo and load the config, it will stop immediately.
+#      fail-fast: true

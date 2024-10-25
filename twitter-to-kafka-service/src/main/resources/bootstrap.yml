@@ -1,0 +1,11 @@
+#spring:
+#  application:
+#    name: twitter-to-kafka-service
+#  profiles:
+#    # note: naming is important here. In config-server-repository, the name of the config file for this microservice is:
+#    # `config-client-twitter_to_kafka` which matches profiles.active .
+#    active: twitter_to_kafka
+#  cloud:
+#    config:
+#      name: twitter-to-kafka-service,config-client
+#      uri: http://localhost:8888 # config server url

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+
+<!-- use <included> instead of <configuration> -->
+<included>
     <property name="DEV_HOME" value="./twitter-to-kafka-service/logs"/>
     <property name="APP_NAME" value="twitter-to-kafka-service"/>
 
@@ -48,4 +50,4 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-</configuration>
+</included>
