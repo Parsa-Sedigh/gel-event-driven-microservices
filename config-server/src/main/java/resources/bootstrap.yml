@@ -1,0 +1,31 @@
+# This file is loaded by a parent spring application context. So it will be loaded before application.yml and for the
+# spring cloud, we need to set bootstrap phase config in this file. Because this bootstrap.yml will be used to obtain
+# the app config from the config server repository prior to loading application.yml . Bootstrap phase has priority over application.yml
+# and spring cloud config server need to use bootstrap phase first. So we need to separate
+# two configurations: bootstrap.yml and application.yml .
+
+# note about config.server.uri: Although using local filesystem for uri of config-server-repository is a good start as we don't need to
+# install a git server locally, it's not the preferred way. Because with a local filesystem, the config data won't be cloned by
+# the config server and instead it will work directly on the filesystem. When it comes to high availability, we need to point
+# all config server instances to the same repository. But with a filesystem, only a shared filesystem will work but even with a
+# shared filesystem, config server can't clone and cache the config data in the scenario.
+# If you want to use cloning and caching, we can change the protocol to ssh for local filesystem and then use a local git server,
+# so that caching could be used.
+
+# But in our examples, in the end we will be using a remote private github repo for holding config data which will be easier to
+# manage and scale.
+
+# So for high availability and repository caching: use ssh with shared file system or http with remote git repository.
+
+spring:
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        git:
+          uri: file://Users/parsa/dev/personal/java-projects/gel-event-driven-microservices/config-server-repository
+          clone-on-start: true
+
+    # if config server can't reach the config server repo and load the config, it will stop immediately.
+    fail-fast: true

@@ -19,6 +19,9 @@ Note: application.yml defined in the service, overrides the config in the config
 in config-client.yml .
 
 Note: config-server will need a git repo to be able to fetch the data from this(config-server-repository) folder.
+In other words, the config-server microservice fetches the data from the config-server-repository.
+
+The bootstrap.yml is required in case of loading config in bootstrap phase which has priority over application.yml .
 
 ## 22-002 Creating Spring Cloud Config Server as a Microservice
 ## 23-003 Using a common logback file for all microservices
