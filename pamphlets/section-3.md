@@ -506,8 +506,12 @@ the twitter-to-kafka-service.
 
 Note: when we run `mvn install`, it will also run the context load tests and currently when the context loads, it will
 try to reach to kafka in the test and since we don't have any kafka mock running on test, we should first run a kafka
-cluster locally before running `mvn install` or we can use `mvn install -DskipTests` to skip context load test, so we can
-install deps and create docker img.
+cluster locally before running `mvn install` or we can use:
+```shell
+mvn install -DskipTests
+```
+
+to skip context load test, so we can install deps and create docker img.
 
 Spring boot `build-image` follows layerd approach to prevent two overheads:
 1. prevents creating a single fat jar
@@ -528,7 +532,7 @@ kafkacat -L -b localhost:19092
 docker logs -f container_id
 ```
 
-However, we can use the .env file to set the yml files we wanna run, by setting the `COMPOSE_FILE` env and then we can only run
+However, we can use the .env file to set the yml files we wanna run, by setting the `COMPOSE_FILE` env and then we can only run:
 ```shell
 # in docker-compose directory:
 docker compose up
