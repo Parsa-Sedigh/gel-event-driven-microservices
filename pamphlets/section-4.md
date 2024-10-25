@@ -25,6 +25,14 @@ The bootstrap.yml is required in case of loading config in bootstrap phase which
 
 ## 22-002 Creating Spring Cloud Config Server as a Microservice
 ## 23-003 Using a common logback file for all microservices
+Common logback file. Share appends and pass service specific parameters. Create a `logback-common.xml` file in app-config-data module.
+With this approach, we can change or add appenders in a single centralized place and it will immediately all the services that include
+that common-logback.xml
+
+Since we put the logback-common.xml in resources folder of app-config-data module, it will end up in the classpath. So we can include
+this using a `<include resource="..." />` without setting any path for `resource`. So we only need to set the name of the logback-common.xml
+since logback will scan the classpath starting from the top directory.
+
 ## 24-004 Changing twitter-to-kafka-service to work with config server
 ## 25-005 lecture-23-run-project
 ## 26-005 Using remote GitHub repository
