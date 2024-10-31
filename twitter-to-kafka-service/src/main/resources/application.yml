@@ -57,7 +57,9 @@
 #  # if after this timeout, no ack comes, producer will throw timeout error
 #  request-timeout-ms: 60000
 #  retry-count: 5
-
+logging:
+  level:
+    root: debug
 spring:
   application:
     name: twitter-to-kafka-service
@@ -68,3 +70,7 @@ spring:
   config:
     name: twitter-to-kafka-service,config-client
     import: configserver:http://localhost:8888
+  cloud:
+    config:
+      username: 123
+      password: 123

@@ -48,8 +48,29 @@ to skip the context load test in case you don't want to run config-server.
 
 ## 25-005 lecture-23-run-project
 ## 26-005 Using remote GitHub repository
+To enable high availability for config server and to manage and scale better, we use a remote github repo.
+
+Since it's a private repo, we need to provide username and password.
+
+Here, we need to do a change in using the password for github account. We need to use a token instead of our github account password directly.
+
+change default branch from master to main by using `spring.cloud.config.server.git.default-label`. So set it to main.
+
+When config server is running, you can go to `localhost:8888/config-client/twitter_to_kafka`
+
 ## 27-006 Adding security to config server and encrypt passwords
+Add basic auth to config server by adding spring security dep. Having this dep, automatically enables basic auth.
+
+We wanna encrypt the passwords. One is remote github pass and the other is local config server pass. For that we create two git branches.
+One for jasypt encryption and the other for JCE(java cryptography extension encryption).
+
+These are for encrypting secrets.
+
 ## 28-007 Using Jasypt to encrypt sensitive data
+Java simplified encryption
+
+jasytp: provides basic encryption capabilities
+
 ## 29-008 Using JCE to encrypt sensitive data
 ## 30-009 JCE vs Jasypt
 ## 31-010 Containerization of config server by creating the docker image

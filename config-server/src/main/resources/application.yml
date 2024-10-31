@@ -4,7 +4,7 @@ server:
 # logging level can override logback logging properties(defined in logback.xml) in application config
 logging:
   level:
-    ROOT: INFO
+    ROOT: DEBUG
     org.spring.framework.cloud.config: DEBUG
 
 spring:
@@ -14,8 +14,16 @@ spring:
     config:
       server:
         git:
-          uri: file:///Users/parsa/dev/personal/java-projects/gel-event-driven-microservices/config-server-repository
+          #          uri: file:///Users/parsa/dev/personal/java-projects/gel-event-driven-microservices/config-server-repository
+          uri: https://github.com/Parsa-Sedigh/gel-event-driven-microservices-spring-cloud-config-repository
           clone-on-start: true
+          username: Parsa-Sedigh
+          password: x
+      #          default-label: main # when we're using git, this would be name of the git branch
 
       # if config server can't reach the config server repo and load the config, it will stop immediately.
       fail-fast: true
+  security:
+    user:
+      name: 123
+      password: 123
