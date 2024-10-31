@@ -24,6 +24,14 @@ spring:
       # if config server can't reach the config server repo and load the config, it will stop immediately.
       fail-fast: true
   security:
+    #    user:
+    #      name: 123
+    #      password: ENC(SJqPr1mrH+MihDeGt1FTNNojX8QyqXJqgE7u4rEx/PhdWim8IaLRtSEV2mQu/ZDN)
     user:
       name: 123
       password: 123
+
+#jasypt:
+#  encryptor:
+#    # the password used for encrypting. In playground service, we used standardPBEStringEncryptor.setPassword() for this.
+#    password: ${JASYPT_ENCRYPTOR_PASSWORD}

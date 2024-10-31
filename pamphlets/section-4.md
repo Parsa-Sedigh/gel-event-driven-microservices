@@ -71,6 +71,27 @@ Java simplified encryption
 
 jasytp: provides basic encryption capabilities
 
+Note: Since we added the playground as a submodule in our project, it will be added automatically to the <modules> section of 
+root pom. Remove it from there because we won't use it as a submodule for our app. It will just be a playground module to run some
+jasypt tests.
+
+Secure jasypt key: Make it parameterized to obtain at startup securely.
+
+Note: We don't want to hardcode the encryptor key at application.yml, we wanna pass this key when the app starts. We can do this using
+startup parameters.
+
+So run this to set the env:
+```shell
+export JASYPT_ENCRYPTOR_PASSWORD='<...>'
+```
+
+Note: export command only sets env vars temporarily. To make it permanent, go to ~/.bash_profile or ... and set it there.
+Then restart intellij so it could pick it up. You can also pass it using `program arguments` in intellij:
+`-Djasypt.encryptor.password='<...>'`.
+
+Note: We can remove jasypt encryptor password from application.yml because spring boot will automatically pick up this env var
+from system.
+
 ## 29-008 Using JCE to encrypt sensitive data
 ## 30-009 JCE vs Jasypt
 ## 31-010 Containerization of config server by creating the docker image

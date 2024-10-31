@@ -71,6 +71,16 @@ spring:
     name: twitter-to-kafka-service,config-client
     import: configserver:http://localhost:8888
   cloud:
+    #    config:
+    #      username: 123
     config:
       username: 123
       password: 123
+
+  # by using ENC(), spring boot understands that this password is encrypted by using jasypt
+#      password: ENC(SJqPr1mrH+MihDeGt1FTNNojX8QyqXJqgE7u4rEx/PhdWim8IaLRtSEV2mQu/ZDN)
+
+# add these to be able to decrypt the passwords at runtime
+#jasypt:
+#  encryptor:
+#    password: ${JASYPT_ENCRYPTOR_PASSWORD}

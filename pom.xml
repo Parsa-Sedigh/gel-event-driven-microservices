@@ -40,6 +40,7 @@
         <jakarta.version>2.1.1</jakarta.version>
         <spring-cloud.version>4.1.3</spring-cloud.version>
         <spring-cloud-dependencies.version>2023.0.3</spring-cloud-dependencies.version>
+        <jasypt-spring-boot-strater.version>3.0.5</jasypt-spring-boot-strater.version>
     </properties>
 
     <!-- We can also set this repositories in maven-settings.xml . -->
@@ -178,6 +179,12 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
                 <version>${spring-boot.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt-spring-boot-strater.version}</version>
             </dependency>
 
             <!-- This dep is located at confluent repository not in maven central repository. So we need a new repo in
