@@ -93,5 +93,28 @@ Note: We can remove jasypt encryptor password from application.yml because sprin
 from system.
 
 ## 29-008 Using JCE to encrypt sensitive data
+To use jce, first we need to install spring-boot-commandline utility. To use spring-boot-commandline utility, first we need to install
+sdkman or brew. If you chose sdkman, run:
+```shell
+sdk install springboot
+ls ~/.sdkman/candidates
+cd ~/.sdkman/candidates/springboot
+spring install org.springframework.cloud:spring-cloud-cli:<installed version>.RELEASE
+
+# to encrypt the password
+spring encrypt PLAIN_TEXT --key KEY
+```
+
+Then put the result string into the cloud.config.password in this format: `{cipher}<encrypted password>`. This way spring understands
+this pass is encrypted using JCE.
+
+**Note: Each time, the encrypt command will give different result because it uses a random salt value for secret key generation.**
+
+Also encrypt the github password as well.
+
+We can implement /encrypt and /decrypt endpoints to use config server for encryption.
+Then make a POST call to `localhost:8888/encrypt` and in body, put the password you wanna encrypt in raw text format.
+You can also call `localhost:8888/decrypt` and put the encrypted password in the body.
+
 ## 30-009 JCE vs Jasypt
 ## 31-010 Containerization of config server by creating the docker image
