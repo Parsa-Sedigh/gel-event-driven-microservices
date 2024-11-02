@@ -9,8 +9,9 @@ public class TestJasypt {
         StandardPBEStringEncryptor standardPBEStringEncryptor = new StandardPBEStringEncryptor();
 
         /* jasypt will use this password as a key when encrypting our secrets. That means we need to pass this password to our
-        app at runtime to be able to DECRYPT the secrets. */
-        standardPBEStringEncryptor.setPassword("Demo");
+        app at runtime to be able to DECRYPT the secrets.
+        Note: Load x secret key at runtime when running the service*/
+        standardPBEStringEncryptor.setPassword("x");
         standardPBEStringEncryptor.setAlgorithm("PBEWithHmacSHA512AndAES_256");
         standardPBEStringEncryptor.setIvGenerator(new RandomIvGenerator());
 

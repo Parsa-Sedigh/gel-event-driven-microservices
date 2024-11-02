@@ -117,4 +117,72 @@ Then make a POST call to `localhost:8888/encrypt` and in body, put the password 
 You can also call `localhost:8888/decrypt` and put the encrypted password in the body.
 
 ## 30-009 JCE vs Jasypt
+JCE is preferred way for encrypting secrets.
+
+Jasypt default output is in base64 encoding, but can also be set to hexadecimal. But JCE default output is hexadecimal.
+
+In Jasypt using PBKDF2(password based key derivation function 2) is not possible to create a secret key. In Jasypt we can only
+use PBEKeySpec without salt and iteration count. All of the PBE algos use a one-way hashing func. However in Jasypt PBE implementation,
+salt is used in encryption process directly and not in creating the secret key. However, with PBKDF2, secret key is created using
+a salt and then with an iteration count, to end up with a slow hashing algo.
+
+By using a slow hash func, PBKDF2 makes it difficult to use brute-force attacks and by increasing iteration count,
+this difficulty can be increased further.
+
+So PBKDF2 reduces vulnerabilities to brute-force attacks by using salt and iteration count.
+
+Jasypt approach might be a little bit faster especially with cached single salt where only a single salt is used and cached for later usages.
+But using a PBEKeySpec without salt and iteration count is less secure and more prone to rainbow attacks, especially if the key is not
+strong enough.
+
+Rainbow attacks: type of attack that uses a hash table to crack passwords by comparison.
+
+Rainbow attacks hold the plain text passwords and hash pairs in a pre-computed rainbow table and use brute-force to try to match the hashed value
+with an input.
+
+![](img/section-4/30-1.png)
+
+A real rainbow table is more complicated like first matching the first part of a hash value and then it goes to one level deeper to
+continue searching.
+
+JCE uses AesBytesEncryptor and PBKDF2 which is PBEKeySpec with salt and iteration count.
+
+So Jasypt is easier to use but JCE is more secure.
+
+**Note: The encrypted values in configs, will be decrypted at startup by config-server and sent to services in unencrypted format.
+So it's important to use ssl/tls enabled communication in production env.**
+
+**Note: Here we're using symmetric encryption which means there's a single key for both encryption and decryption.**
+There is a better approach which is using asymmetric encryption like RSA where encryption is done by a public key
+while decryption is done by a private key. It's more secure as it uses 2 keys: public key is shared but private key kept as confidential.
+
+Asymmetric vs symmetric
+Asymmetric:
+- more secure as it has 2 keys. msg is encrypted with a public key and can only be decrypted using the corresponding private key.
+So without knowing the private key, an attacker can't decrypt the encrypted val.
+- this approach is slower because it has more complex mathematical logic and it uses two different keys for encryption and decryption.
+The natural tradeoff is between having more secure or faster systems.
+- enables using digital signature which enables checking data integrity. So apart from confidentiality, asymmetric approach provides
+**data integrity which will help to identify if the data in transit is changed or tampered.**
+- an example algo that uses this approach is **RSA** which is used in SSL and TLS solutions.
+
+symmetric: 
+- this approach has a single key which makes it faster than asymmetric but less secure than asymmetric. So the same key is used for both encryption and decryption.
+- it provides confidentiality to share msgs in encrypted formats
+- since we only have a single key, it will be a challenge to share this key. But in asymmetric approach we always keep the private key as a secret
+while we can share the public key with everyone.
+- **AES** algo uses this encryption
+
+We will use JCE and decrypt the secrets in the config-server and send to microservices. For prod, enable SSL/TLS in communication between config server and microservices.
+
 ## 31-010 Containerization of config server by creating the docker image
+What happens when a microservice tries to reach to config-server and config-server is not up yet?
+
+A: We need to set health check to config-service and wait until it's ready. We can use depends_on in docker compose file. However, we need a more
+sophisticated approach. Because depends_on only checks if the container is up and running not the app inside of container is really running or not.
+For this, we wrote check-config-server-started.sh .
+
+Then run:
+```shell
+chmod +x check-config-server-started.sh
+```
