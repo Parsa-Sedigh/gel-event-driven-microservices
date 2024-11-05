@@ -25,7 +25,7 @@ while using autocommit because a failure can always happen. For this, you need t
 semantic depending on your needs. But if at least once is good enough, you don't need to think about exactly once.
 
 ## 33-002 Adding kafka-consumer module
+CPU stall: bad cpu utilization - cpu doesn't make progress although it is running.
 
-
-003 Creating the microservice kafka-to-elastic-service
-004 Adding initialization check
+## 34-003 Creating the microservice kafka-to-elastic-service
+## 35-004 Adding initialization check
