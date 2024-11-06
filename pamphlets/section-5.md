@@ -28,4 +28,22 @@ semantic depending on your needs. But if at least once is good enough, you don't
 CPU stall: bad cpu utilization - cpu doesn't make progress although it is running.
 
 ## 34-003 Creating the microservice kafka-to-elastic-service
+To be able to use our config-server, the microservice needs two `spring-cloud-starter-config` and `spring-cloud-starter-security` deps.
+
+@KafkaListener: creates a kafka consumer.
+
+Note: When sth in config-server-repository is changed, before running microservices to get the new changes you should push those changes to the
+related remote git repo.
+
+For now, set auto-startup to true, since we're sure that kafka cluster and other services are already running. So no need to
+check initialization logic. Which we will add later and set auto-startup to false.
+
+```shell
+mvn install -DskipTests
+
+# in docker-compose folder
+docker compose up
+docker logs -f <contianer id of twitter-to-kafka-service>
+```
+
 ## 35-004 Adding initialization check
