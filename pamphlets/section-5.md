@@ -98,6 +98,8 @@ So put the json in body of PUT req and send it to `localhost:9200/twitter-index`
 After creating the index, create a document with `POST twitter-index/_doc/1`.
 
 ## 38-007 Creating elastic-model module
+@Document: indicates this class is a candidate for mapping to elasticsearch.
+
 ## 39-008 Creating elastic-config module
 ## 40-009 Creating elastic-index-client module
 ## 41-010 Using Elasticsearch repositories for indexing
