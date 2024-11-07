@@ -6,6 +6,8 @@ import com.microservices.demo.kafka.avro.model.TwitterAvroModel;
 import com.microservices.demo.kafka.to.elastic.service.consumer.KafkaConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationStartedEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
 import org.springframework.kafka.support.KafkaHeaders;
@@ -28,6 +30,17 @@ public class TwitterKafkaConsumer implements KafkaConsumer<Long, TwitterAvroMode
         this.kafkaListenerEndpointRegistry = kafkaListenerEndpointRegistry;
         this.kafkaAdminClient = kafkaAdminClient;
         this.kafkaConfigData = kafkaConfigData;
+    }
+
+    @EventListener
+    public void onAppStarted(ApplicationStartedEvent event) {
+        // are kafka topics created?
+        kafkaAdminClient.checkTopicsCreated();
+
+        LOG.info("Topics with name {} are ready for operations!", kafkaConfigData.getTopicNamesToCreate().toArray());
+
+        // `auto-startup` config is false. Because we want to start it explicitly after checking the kafka topics are created.
+        kafkaListenerEndpointRegistry.getListenerContainer("twitterTopicListener").start();
     }
 
     @Override

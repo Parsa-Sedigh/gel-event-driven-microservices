@@ -47,3 +47,25 @@ docker logs -f <contianer id of twitter-to-kafka-service>
 ```
 
 ## 35-004 Adding initialization check
+@EventListener: marks a method as a listener for application events.
+
+## 36-005 Introducing Elasticsearch
+- Elastic search runs a apache lucene engine in the background.
+- Elastic search organizes data using documents and makes them easily accessible and searchable.
+- Elastic search has built-in type guessing and dynamic mapping which will understand the type of a field even though it's not explicitly
+defined.
+
+**Note: You can only find the terms that exist in your index.**
+
+Q: How does elasticsearch processes a text before indexing(normalizing)?
+
+A: It uses built in analyzers. Those 3 steps in the slide.
+
+## 37-006 Running elastic search with docker
+
+## 38-007 Creating elastic-model module
+## 39-008 Creating elastic-config module
+## 40-009 Creating elastic-index-client module
+## 41-010 Using Elasticsearch repositories for indexing
+## 42-011 Integrating elastic modules with microservice
+## 43-012 Containerization of microservice with docker image Run all with docker compose

@@ -2,9 +2,6 @@
 
 <!-- use <included> instead of <configuration> -->
 <included>
-    <property name="DEV_HOME" value="./twitter-to-kafka-service/logs"/>
-    <property name="APP_NAME" value="twitter-to-kafka-service"/>
-
     <!-- This appender writes to console -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
