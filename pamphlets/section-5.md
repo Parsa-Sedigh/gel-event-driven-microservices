@@ -62,6 +62,40 @@ Q: How does elasticsearch processes a text before indexing(normalizing)?
 A: It uses built in analyzers. Those 3 steps in the slide.
 
 ## 37-006 Running elastic search with docker
+We create 3 nodes for elastic search like kafka cluster which has 3 nodes. This number is chosen to accomplish quorum and to prevent
+split-brain issue while maximizing number of nodes.
+
+- Quorum: set the minimum number of nodes to create a network - prevent split brain.
+- prevent split brain: maximize number of nodes which could be down at a moment
+
+It's recommended to use **odd number of master eligible** nodes. Note that with 4 nodes, we can **still** have at most one node to be down
+to still have a cluster. So having 4 nodes is no different from having 3. We can still tolerate 1 node being down.
+We can only increase this number with odd number of nodes, such as 3 or 5 or ... . With 5 nodes, we can tolerate two nodes being down
+and still have a cluster.
+
+Note: if you use only two nodes for example, maximum number of master nodes must be 2. In that case, if even one node is down,
+you can't maintain a cluster. That's why to tolerate one node being down, we need at least 3 nodes to maintain a cluster to accomplish 
+a quorum.
+
+**elasticsearch quorum formula: (master_eligible_nodes / 2) + 1**
+
+this property is necessary to prevent swapping. Most operating systems try to use as much memory as possible for
+the filesystem caches and eagerly swap out unused application memory. This can result in parts of the jvm heap or even
+it's executable pages being swapped out to disk. Swapping is very bad for performance and for node stability and
+should be avoided at all costs. It can use garbage collections to last for minutes instead of milliseconds and can
+cause nodes to response slowly or even to disconnect from the cluster.
+In a resilient distributed system it is more effective to let the OS kill the node. bootstrap.memory_lock=true
+
+  
+```shell
+docker compose -f common.yml -f elastic_cluster.yml up
+```
+Then send a GET to localhost:9200 which is elastic-1 node.
+
+Now we can use the mapping definition in the slides(slide with index API header) to create an index called `twitter-index`.
+So put the json in body of PUT req and send it to `localhost:9200/twitter-index`.
+
+After creating the index, create a document with `POST twitter-index/_doc/1`.
 
 ## 38-007 Creating elastic-model module
 ## 39-008 Creating elastic-config module
