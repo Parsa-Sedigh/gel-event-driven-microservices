@@ -105,5 +105,9 @@ We use the same version for elasticsearch image in the elastic cluster and elast
 
 ## 40-009 Creating elastic-index-client module
 ## 41-010 Using Elasticsearch repositories for indexing
+There's an alternate way to `ElasticsearchOperations` class in order to query against elastic search.
+
+This way has less code but we loose some flexibility. The way is to use elastic search repositories.
+
 ## 42-011 Integrating elastic modules with microservice
 ## 43-012 Containerization of microservice with docker image Run all with docker compose
