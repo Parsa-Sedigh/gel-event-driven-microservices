@@ -101,6 +101,8 @@ After creating the index, create a document with `POST twitter-index/_doc/1`.
 @Document: indicates this class is a candidate for mapping to elasticsearch.
 
 ## 39-008 Creating elastic-config module
+We use the same version for elasticsearch image in the elastic cluster and elasticsearch dep.
+
 ## 40-009 Creating elastic-index-client module
 ## 41-010 Using Elasticsearch repositories for indexing
 ## 42-011 Integrating elastic modules with microservice
